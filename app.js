@@ -1,17 +1,45 @@
 document.addEventListener("DOMContentLoaded", function () {
     console.log('DoingFine app is running!');
 
-    // Lisää uusi otsikko sivulle
-    const body = document.body;
-    const heading = document.createElement("h2");
-    heading.textContent = "Let's start tracking your well-being!";
-    body.appendChild(heading);
+    const moodInput = document.getElementById("moodInput");
+    const lastMoodDisplay = document.getElementById("lastMood");
+    const averageMoodDisplay = document.getElementById("averageMood");
 
-    // Lisää nappi testikäyttöä varten
-    const button = document.createElement("button");
-    button.textContent = "Click me!";
-    button.onclick = function () {
-        alert("DoingFine is working!");
+    // Hae aiemmin tallennettu fiilis paikallisesta tallennuksesta
+    let moodHistory = JSON.parse(localStorage.getItem("moodHistory")) || [];
+
+    // Näytä viimeisin fiilis
+    if (moodHistory.length > 0) {
+        lastMoodDisplay.textContent = moodHistory[moodHistory.length - 1];
+        updateAverageMood();
+    }
+
+    window.saveMood = function() {
+        const moodValue = parseInt(moodInput.value);
+
+        if (moodValue >= 1 && moodValue <= 10) {
+            moodHistory.push(moodValue);
+
+            // Säilytä vain viimeiset 7 päivää
+            if (moodHistory.length > 7) {
+                moodHistory.shift();
+            }
+
+            // Tallenna paikallisesti
+            localStorage.setItem("moodHistory", JSON.stringify(moodHistory));
+
+            // Päivitä UI
+            lastMoodDisplay.textContent = moodValue;
+            updateAverageMood();
+        } else {
+            alert("Please enter a value between 1 and 10.");
+        }
     };
-    body.appendChild(button);
+
+    function updateAverageMood() {
+        if (moodHistory.length > 0) {
+            const average = moodHistory.reduce((a, b) => a + b, 0) / moodHistory.length;
+            averageMoodDisplay.textContent = average.toFixed(1);
+        }
+    }
 });
