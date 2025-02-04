@@ -9,5 +9,14 @@
 <body>
     <h1>Welcome to DoingFine</h1>
     <p>Track your well-being and improve your habits!</p>
+
+    <h2>How are you feeling today?</h2>
+    <input type="number" id="moodInput" min="1" max="10" placeholder="Enter 1-10">
+    <button onclick="saveMood()">Save</button>
+
+    <h3>Last recorded mood: <span id="lastMood">-</span></h3>
+    <h3>7-day average: <span id="averageMood">-</span></h3>
+
+    <script src="./app.js" defer></script>
 </body>
 </html>
